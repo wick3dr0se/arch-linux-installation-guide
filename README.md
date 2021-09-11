@@ -1,6 +1,11 @@
-# Arch Linux [Installation](https://wiki.archlinux.org/title/Installation_guide) Guide
+# Arch Linux Indtallation Guide
 #### The goal of this guide is to provide an easier to interpret, while still chomprehensive how-to for installing Arch Linux on x86_64 architecture devices. This guide primarily focuses on utilizing systemd to keep it as close to minimal as possible; there are refrences if you prefer a different network tool or boot loader.
+###### This guide is a mix of knowledge and information taken directly from the [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide)
 ----
+### ISO creation
+if your system can access linux commands, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the [downloaded](https://archlinux.org/download/) iso -- for more, see how to  create an installer image [here](https://wiki.archlinux.org/title/USB_flash_installation_medium).
+
+when you've sucessfully created a bootable image from the iso, attach the device and boot into the live enviornment. secure boot must be disabled from the [bios](https://en.m.wikipedia.org/wiki/BIOS) to boot the installation medium
 
 ### Verify Boot Mode
 list the efivars direcrory
@@ -136,7 +141,7 @@ create [hostname](https://wiki.archlinux.org/title/Hostname) file
 
 add matching entries to [hosts](https://man.archlinux.org/man/hosts.5)
 
-> $ `nan.o /etc/hosts`
+> $ `nano /etc/hosts`
 ```diff
 127.0.0.1    localhost  
 ::1          localhost  
