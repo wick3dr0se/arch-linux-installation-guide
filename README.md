@@ -4,9 +4,9 @@
 ###### This guide is a mix of knowledge and information taken directly from the [ArchWiki](https://wiki.archlinux.org/title/Installation_guide)
 ----
 ### Live Media Creation
-if your system can access linux commands, use ['dd'](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the [downloaded](https://archlinux.org/download/) iso. there are several options -- for more, see how to  create an installer image [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
+if your system can access linux commands, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the [downloaded](https://archlinux.org/download/) iso. there are several options -- for more, see how to  create an installer image [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
 
-the 'of' path should be replaced with the destination to your usb/sd; insert the device and use ['lsblk'](https://wiki.archlinux.org/title/Lsblk#lsblk) to check path. it should be something like 'sdb'
+the 'of' path should be replaced with the destination to your usb/sd; insert the device and use [lsblk](https://wiki.archlinux.org/title/Lsblk#lsblk) to check path. it should be something like 'sdb'
 
 > $ `dd bs=4M if=/<path>/<to>/<archlinux>.iso of=/dev/<sdx> status=progress && sync`
 
