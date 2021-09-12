@@ -1,9 +1,9 @@
-# Arch Linux Indtallation Guide
+# Arch Linux Installation Guide
 #### The goal of this guide is to provide an easier to interpret, while still chomprehensive how-to for installing Arch Linux on x86_64 architecture devices. This guide primarily focuses on utilizing systemd to keep it as close to minimal as possible; there are refrences if you prefer a different network tool or boot loader.
 ###### This guide is a mix of knowledge and information taken directly from the [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide)
 ----
-### ISO creation
-if your system can access linux commands, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the [downloaded](https://archlinux.org/download/) iso -- for more, see how to  create an installer image [here](https://wiki.archlinux.org/title/USB_flash_installation_medium).
+### Live Media Creation
+if your system can access linux commands, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the [downloaded](https://archlinux.org/download/) iso -- for more, see how to  create an installer image [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
 
 when you've sucessfully created a bootable image from the iso, attach the device and boot into the live enviornment. secure boot must be disabled from the [bios](https://en.m.wikipedia.org/wiki/BIOS) to boot the installation medium
 
@@ -12,7 +12,7 @@ list the efivars direcrory
 
 > $ `ls /sys/firmware/efi/efivars`
 
-if the command returns the directory without error, then the system is booted in [uefi](https://wiki.archlinux.org/title/UEFI). if the directory doesn't exist you may be booted in [bios](https://wiki.archlinux.org/title/Arch_boot_process#Under_BIOS) or [csm](https://en.wikipedia.org/wiki/Compatibility_Support_Module).
+if the command returns the directory without error, then the system is booted in [uefi](https://wiki.archlinux.org/title/UEFI). if the directory doesn't exist you may be booted in [bios](https://wiki.archlinux.org/title/Arch_boot_process#Under_BIOS) or [csm](https://en.wikipedia.org/wiki/Compatibility_Support_Module)
 
 ### Initial Network Setup
 check your [network interface](https://wiki.archlinux.org/title/Network_interface#Network_interfaces) is enabled with [iplink](https://man.archlinux.org/man/ip-link.8)
@@ -164,7 +164,7 @@ setup systemd for wireless networking. for ethernet -- see [wired adapter](https
 
 > $ `nano /etc/systemd/network/25-wireless.network`
 ```diff
-[Match] Name=wlp2s0
+[Match] Name=<interface>
 
 [Network] DHCP=yes
 ```
