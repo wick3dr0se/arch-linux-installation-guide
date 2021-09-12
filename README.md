@@ -1,9 +1,14 @@
-# Arch Linux Installation Guide
+![Arch Linux](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png)
+## Arch Linux Installation Guide
 #### The goal of this guide is to provide an easier to interpret, while still chomprehensive how-to for installing Arch Linux on x86_64 architecture devices. This guide primarily focuses on utilizing systemd to keep it as close to minimal as possible; there are refrences if you prefer a different network tool or boot loader.
-###### This guide is a mix of knowledge and information taken directly from the [Arch Wiki](https://wiki.archlinux.org/title/Installation_guide)
+###### This guide is a mix of knowledge and information taken directly from the [ArchWiki](https://wiki.archlinux.org/title/Installation_guide)
 ----
 ### Live Media Creation
-if your system can access linux commands, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the [downloaded](https://archlinux.org/download/) iso -- for more, see how to  create an installer image [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
+if your system can access linux commands, use ['dd'](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the [downloaded](https://archlinux.org/download/) iso. there are several options -- for more, see how to  create an installer image [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
+
+the 'of' path should be replaced with the destination to your usb/sd; insert the device and use ['lsblk'](https://wiki.archlinux.org/title/Lsblk#lsblk) to check path. it should be something like 'sdb'
+
+> $ `dd bs=4M if=/path/to/archlinux.iso of=/dev/<sdx> status=progress && sync`
 
 when you've sucessfully created a bootable image from the iso, attach the device and boot into the live enviornment. secure boot must be disabled from the [bios](https://en.m.wikipedia.org/wiki/BIOS) to boot the installation medium
 
@@ -12,7 +17,7 @@ list the efivars direcrory
 
 > $ `ls /sys/firmware/efi/efivars`
 
-if the command returns the directory without error, then the system is booted in [uefi](https://wiki.archlinux.org/title/UEFI). if the directory doesn't exist you may be booted in [bios](https://wiki.archlinux.org/title/Arch_boot_process#Under_BIOS) or [csm](https://en.wikipedia.org/wiki/Compatibility_Support_Module)
+if the command returns the directory without error, then the system is booted in [uefi](https://wiki.archlinux.org/title/UEFI). if the directory doesn't exist you may be booted in [bios](https://wiki.archlinux.org/title/Arch_boot_process#Under_BIOS) or [csm](https://en.wikipedia.org/wiki/Compatibility_Support_Module) mode
 
 ### Initial Network Setup
 check your [network interface](https://wiki.archlinux.org/title/Network_interface#Network_interfaces) is enabled with [iplink](https://man.archlinux.org/man/ip-link.8)
@@ -48,7 +53,7 @@ verify connection
 exit prompt using ctrl+c
 
 ### System Clock
-set system clock with [timedatectl](https://man.archlinux.org/man/timedatectl.1)
+set system clock with ['timedatectl'](https://man.archlinux.org/man/timedatectl.1)
 
 > $ `timedatectl set-ntp true`
 
@@ -57,7 +62,7 @@ check status
 > $ `timedatectl status`
 
 ### Disk Partitioning
-[list disks/block](https://wiki.archlinux.org/title/Lsblk) devices 
+list disk and block devices 
 
 > $ `lsblk`
  
@@ -122,7 +127,7 @@ generate /etc/adjtime with [hwclock](https://man.archlinux.org/man/hwclock.8)
 this assumes the hardware clock is set to [utc](https://en.m.wikipedia.org/wiki/UTC). for more, see [system time#time standard](https://wiki.archlinux.org/title/System_time#Time_standard)
 
 ### Localization
-[edit](https://wiki.archlinux.org/title/Textedit) /etc/locale.gen and un[comment](https://linuxhint.com/bash_comments/) 'en_US.UTF-8 UTF-8' or any other necessary [locales](https://wiki.archlinux.org/title/Locale)
+[edit](https://wiki.archlinux.org/title/Textedit) /etc/locale.gen and un[comment](https://linuxhint.com/bash_comments/) 'en_US.UTF-8 UTF-8' or any other necessary [locales](https://wiki.archlinux.org/title/Locale) by removing the #
 
 > $ `nano /etc/locale.gen`
 
@@ -150,7 +155,7 @@ add matching entries to [hosts](https://man.archlinux.org/man/hosts.5)
 
 if the system has a permanently assigned ip address, use it instead of '127.0.1.1'
 
-install any desired [network managment](https://wiki.archlinux.org/title/Network_configuration) software. in this guide, we're using systemd-networkd. for an easier, configureless setup -- check out [networkmanager](https://wiki.archlinux.org/title/NetworkManager)
+install any desired [network managment](https://wiki.archlinux.org/title/Network_configuration) software. in this guide, we're using [systemd-networkd](https://wiki.archlinux.org/title/Systemd-networkd). for an easier, configureless setup -- check out [networkmanager](https://wiki.archlinux.org/title/NetworkManager)
 
 connect to the network with [wpa_passphrase](https://wiki.archlinux.org/title/Wpa_supplicant#Connecting_with_wpa_passphrase)
 
@@ -164,9 +169,23 @@ setup systemd for wireless networking. for ethernet -- see [wired adapter](https
 
 > $ `nano /etc/systemd/network/25-wireless.network`
 ```diff
-[Match] Name=<interface>
+[Match]
+Name=<interface>
 
-[Network] DHCP=yes
+[Network] 
+DHCP=yes
+```
+
+if you are using a static connection, it's mandatory to list ip address and gateway.  it should look something like this
+
+```diff
+[Match]
+Name=<interface>
+
+[Network]
+Address=<10.1.10.9/24>
+Gateway=<10.1.10.1>
+DNS=<10.1.10.1>
 ```
 
 enable & start the systemd-network service daemon
@@ -189,7 +208,7 @@ add created user to the wheel group for sudo priveleges
 
 > $ `usermod -aG wheel <username>`
 
-uncomment %wheel
+uncomment '%wheel', by removing the #
 
 > $ `EDITOR=nano visudo`
 
@@ -201,14 +220,14 @@ set [root user](https://wiki.archlinux.org/title/Root_user) password
 
 > $ `passwd`
 
-optionally, disable access to [superuser](https://en.m.wikipedia.org/wiki/Root_user)/root user for security
+optionally, disable access to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), locking password entry for root user. this will give your system increased security and you can still elevate a user in the wheel group to superuser priveleges with sudo and su commands
 
 > $ `passwd -l root`
 
 ### Boot Loader
 install a linux-capable [boot loader](https://wiki.archlinux.org/title/Boot_loader); in our case [systemd-boot](https://wiki.archlinux.org/title/Systemd-boot)
 
-install the boot loader in the efi system partition
+install systemd-boot in the efi system partition
 
 > $ `bootctl --path=/boot install`
 
@@ -216,12 +235,14 @@ add a [boot entry](https://wiki.archlinux.org/title/Systemd-boot#Adding_loaders)
 
 > $ `nano /boot/loader/entries/<entry>.conf`
 ```diff
-title Arch Linux  
+title <Arch Linux>  
 linux /vmlinuz-linux  
 initrd /<cpu_manufacturer>-ucode.img  
 initrd /initramfs-linux.img  
 options root=/dev/<root_partition> rw quiet log-level=0
 ```
+
+if you installed a different kernel, such as linux-zen, you would add '-zen' above to 'vmlinuz-linux' and 'initframs-linux'. this will boot the system using your selected kernel. for more -- see [kernel paramters](https://wiki.archlinux.org/title/Kernel_parameters#systemd-boot) 
 
 edit [loader config](https://man.archlinux.org/man/loader.conf.5)
 
