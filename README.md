@@ -8,7 +8,7 @@ if your system can access linux commands, use ['dd'](https://wiki.archlinux.org/
 
 the 'of' path should be replaced with the destination to your usb/sd; insert the device and use ['lsblk'](https://wiki.archlinux.org/title/Lsblk#lsblk) to check path. it should be something like 'sdb'
 
-> $ `dd bs=4M if=/path/to/archlinux.iso of=/dev/<sdx> status=progress && sync`
+> $ `dd bs=4M if=/<path>/<to>/<archlinux>.iso of=/dev/<sdx> status=progress && sync`
 
 when you've sucessfully created a bootable image from the iso, attach the device and boot into the live enviornment. secure boot must be disabled from the [bios](https://en.m.wikipedia.org/wiki/BIOS) to boot the installation medium
 
@@ -53,7 +53,7 @@ verify connection
 exit prompt using ctrl+c
 
 ### System Clock
-set system clock with ['timedatectl'](https://man.archlinux.org/man/timedatectl.1)
+set system clock with [timedatectl](https://man.archlinux.org/man/timedatectl.1)
 
 > $ `timedatectl set-ntp true`
 
@@ -66,26 +66,48 @@ list disk and block devices
 
 > $ `lsblk`
  
-using your preferred [partitioning](https://wiki.archlinux.org/title/Partition) tool([gdisk](https://wiki.archlinux.org/title/Gdisk), [fdisk](https://wiki.archlinux.org/title/Fdisk), [parted](https://wiki.archlinux.org/title/parted) etc) create the required [root](https://wiki.archlinux.org/title/Root_directory#/)(10GB+) [partition](https://wiki.archlinux.org/title/Root_directory). if booted in uefi with [gpt](https://wiki.archlinux.org/title/GPT#GUID_Partition_Table), create an  [efi](https://wiki.archlinux.org/title/EFI_system_partition)(512MB) [system partition](https://wiki.archlinux.org/title/EFI_system_partition); not necessary for bios with [mbr](https://wiki.archlinux.org/title/MBR#Master_Boot_Record). optionally create a [swap](https://wiki.archlinux.org/title/Swap) partition
+using your preferred [partitioning](https://wiki.archlinux.org/title/Partition) tool([gdisk](https://wiki.archlinux.org/title/Gdisk), [fdisk](https://wiki.archlinux.org/title/Fdisk), [parted](https://wiki.archlinux.org/title/parted) etc) create the required [root](https://wiki.archlinux.org/title/Root_directory#/)(10GB+) [partition](https://wiki.archlinux.org/title/Root_directory). if booted in uefi, create a [gpt](https://wiki.archlinux.org/title/GPT#GUID_Partition_Table) table and an  [efi](https://wiki.archlinux.org/title/EFI_system_partition)(512MB) [system partition](https://wiki.archlinux.org/title/EFI_system_partition); not necessary for bios with [mbr](https://wiki.archlinux.org/title/MBR#Master_Boot_Record)
 
-if you have an existing efi partition, don't create one. do not format it or you will delete all data in the partition, rendering other operating systems unbootable. skip the 'mkfs.vfat' command below and mount the already existing efi partition if available. 
+if you have an existing efi partition, don't create a new one. do not format it or you will delete all data in the partition, rendering other operating systems unbootable. skip the 'mkfs.vfat' command below and mount the already existing efi partition if available
 
 if you want to create any stacked block devices for [lvm](https://wiki.archlinux.org/title/LVM), [system encryption](https://wiki.archlinux.org/title/Dm-crypt) or [raid](https://wiki.archlinux.org/title/RAID), do it now
 
-### Format Partitions
-replace 'root_partition' with it's assigned [block device](https://en.m.wikipedia.org/wiki/Device_file#Block_devices), e.g. sda3
+### Swap Space (Optional)
+if you plan to use [swap](https://wiki.archlinux.org/title/Partitioning_tools#Swap) consider creating a [swap partition](https://wiki.archlinux.org/title/Swap#Swap_partition) or [swapfile](https://wiki.archlinux.org/title/Swap#Swap_file) now. your approach would depend on your expectations for your [swap space](https://wiki.archlinux.org/title/Swap_file#Swap_space). to share your swap with other systems or enable hibernation; create a linux swap partition. in comparison, a swapfile can change size on-the-fly and is more easily removed, which may be more desirable for a modestly-sized ssd
 
-> $ `mkfs.ext4 /dev/<root_partition>`
+if you prefer a swapfile use dd to create one now. the following command will create a 4gb swapfile 
 
-replace 'efi_partition' with it's assigned block device, e.g. sda1
+> $ `dd if=/dev/zero of=/swapfile bs=1M count=<4096> status=progress`
 
-> $ `mkfs.vfat -F32 /dev/<efi_partition>`
+a swapfile without the correct permissions is a big security risk. set the file permissions to 600 with [chmod](https://wiki.archlinux.org/title/File_permissions_and_attributes#Changing_permissions)
 
-if you made a swap partition. replace 'swap_partition' with it's assigned block device, e.g. sda2
+> $ `chmod 600 /swapfile`
+
+#### _Swap Partition_
+if you made a swap partition, format it by replacing 'swap_partition' with it's  assigned block device path, e.g. sda2
 
 > $ `mkswap /dev/<swap_partition>`
 
+then activate it
+
 > $ `swapon /dev/<swap_partition>`
+
+#### _Swapfile_
+if you made a swapfile, format it
+
+> $ `mkswap /swapfile`
+
+then activate it
+
+> $ `swapon /swapfile`
+### Format Partitions
+replace 'root_partition' with it's assigned [block device](https://en.m.wikipedia.org/wiki/Device_file#Block_devices) path, e.g. sda3
+
+> $ `mkfs.ext4 /dev/<root_partition>`
+
+replace 'efi_partition' with it's assigned block device path, e.g. sda1
+
+> $ `mkfs.vfat -F32 /dev/<efi_partition>`
 
 ### Mount Partitions
 [mount](https://wiki.archlinux.org/title/Mount) root partition to /mnt
@@ -131,11 +153,13 @@ this assumes the hardware clock is set to [utc](https://en.m.wikipedia.org/wiki/
 
 > $ `nano /etc/locale.gen`
 
+use ctrl+x then 'y' to save and close [nano](https://wiki.archlinux.org/title/Nano). if you want to use a different editor -- see [documents#editors](https://wiki.archlinux.org/title/List_of_applications/Documents#Text_editors)
+
 generate the locales
 
 > $ `locale-gen`
 
-[create](https://wiki.archlinux.org/title/Textedit) the [locale.conf](https://man.archlinux.org/man/locale.conf.5) file and set [LANG variable](https://wiki.archlinux.org/title/Locale#Setting_the_system_locale) 
+[create](https://wiki.archlinux.org/title/Textedit) the [locale.conf](https://man.archlinux.org/man/locale.conf.5) file and set the [system locale](https://wiki.archlinux.org/title/Locale#Setting_the_system_locale) 
 
 > $ `echo LANG=en_US.UTF-8 >> /etc/locale.conf`
 
@@ -204,7 +228,7 @@ create a new user
 
 > $ `useradd -m <username>`
 
-add created user to the wheel group for sudo priveleges
+add created user to the wheel group
 
 > $ `usermod -aG wheel <username>`
 
@@ -220,7 +244,7 @@ set [root user](https://wiki.archlinux.org/title/Root_user) password
 
 > $ `passwd`
 
-optionally, disable access to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), locking password entry for root user. this will give your system increased security and you can still elevate a user in the wheel group to superuser priveleges with sudo and su commands
+optionally, disable access to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), locking password entry for root user. this will give your system increased security and you can still elevate a user in the wheel group to superuser priveleges with [sudo](https://wiki.archlinux.org/title/Sudo) and [su](https://wiki.archlinux.org/title/Su) commands
 
 > $ `passwd -l root`
 
