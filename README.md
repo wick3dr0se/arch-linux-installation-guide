@@ -118,11 +118,11 @@ then activate it
 ----
 
 ### <u>Format Partitions</u>
-format the root partition you just created with your desired [filesystem](https://wiki.archlinux.org/title/File_systems) by replacing 'root_partition' with it's assigned [block device](https://en.m.wikipedia.org/wiki/Device_file#Block_devices) path, e.g. sda3
+format the root partition you just created with your desired [filesystem](https://wiki.archlinux.org/title/File_systems) and replace 'root_partition' with it's assigned [block device](https://en.m.wikipedia.org/wiki/Device_file#Block_devices) path, e.g. sda3
 
 > $ `mkfs.<ext4> /dev/<root_partition>`
 
-format replace 'efi_partition' with it's assigned block device path, e.g. sda1
+format your boot partition by replacing 'efi_partition' with it's assigned block device path, e.g. sda1
 
 > $ `mkfs.vfat -F32 /dev/<efi_partition>`
 
