@@ -114,7 +114,7 @@ check status
 ### Disk Partitioning
 list disk and block devices 
 
-> # `lsblk`
+> **#**&ensp; `lsblk`
  
 using the most desirable [partitioning](https://wiki.archlinux.org/title/Partition) tool([gdisk](https://wiki.archlinux.org/title/Gdisk), [fdisk](https://wiki.archlinux.org/title/Fdisk), [parted](https://wiki.archlinux.org/title/parted), etc) for your system, create the required [root](https://wiki.archlinux.org/title/Root_directory#/)(10GB+) [partition](https://wiki.archlinux.org/title/Root_directory). if booted in uefi, create a [gpt](https://wiki.archlinux.org/title/GPT#GUID_Partition_Table) table and an  [efi](https://wiki.archlinux.org/title/EFI_system_partition)(512MB) [system partition](https://wiki.archlinux.org/title/EFI_system_partition); not necessary for bios with [mbr](https://wiki.archlinux.org/title/MBR#Master_Boot_Record)
 
