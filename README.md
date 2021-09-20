@@ -1,8 +1,37 @@
 ![Arch Linux](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png)
 ## Arch Linux Installation Guide
 #### The goal of this Arch Linux installation guide is to provide an easier to interpret, while still chomprehensive how-to for installing Arch Linux on x86_64 architecture devices. This guide  assumes you are technically inclined and have a basic understanding of Linux. This installation guide was made with intentions of sticking to systemd (systemd-boot, systemd-networkd). Just because of the sheer amount of options and prefrences for networking tools & boot loaders, instructions for NetworkManager & GRUB were included to their respective sections as well. 
-###### This guide is a mix of knowledge and information taken directly from the [ArchWiki](https://wiki.archlinux.org/title/Installation_guide)
+###### This guide is a mix of knowledge and information from the [ArchWiki](https://wiki.archlinux.org/title/Installation_guide)
 ----
+### Contents
+* [Live Media Creation](#live-media-creation)
+* [Verify Boot Mode](#verify-boot-mode)
+* [Inital Network Setup](#initial-network-setup)
+    * [Ethernet](#ethernet)
+    * [Wi-Fi](#wi-fi)
+* [System Clock](#system-clock)
+* [Disk Partitioning](#disk-partitioning)
+* [Swap Space (Optional)](#swap-space-optional)
+    * [Swap Partition](#swap-partition)
+    * [Swapfile](#swapfile)
+* [Format Partitions](#format-partitions)
+* [Mount Partitions](#mount-partitions)
+* [Install Essential Packages](#install-essential-packages)
+* [Fstab](#fstab)
+* [Change Root](#change-root)
+* [Time Zone](#time-zone)
+* [Localization](#localization)
+* [Network Configuration](#network-configuration)
+    * [Systemd-networkd](#systemd-networkd)
+    * [NetworkManager](#networkmanager)
+* [Initramfs](#initramfs)
+* [Users & Passwords](#users-and-passwords)
+* [Boot Loader](#boot-loader)
+    * [Systemd-boot](#systemd-boot)
+    * [GRUB](#grub)
+* [Arch Linux Installation Complete](#arch-linux-installation-complete)
+
+---
 ### Live Media Creation
 if the system can access linux commands, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the downloaded [iso](https://archlinux.org/download/). there are several options -- for more, see how to  create an installer image, [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
 
@@ -229,7 +258,7 @@ install any desired [network managment](https://wiki.archlinux.org/title/Network
 
 ----
 
-#### *_Systemd-Networkd_ 
+#### *_Systemd-networkd_ 
 connect to the network with [wpa_passphrase](https://wiki.archlinux.org/title/Wpa_supplicant#Connecting_with_wpa_passphrase)
 
 > $ `wpa_passphrase <ssid> <password> > /etc/wpa_supplicant/wpa_supplicant-<interface>.conf`
@@ -276,7 +305,7 @@ creating an initramfs image isn't necessary since [mkinitcpio](https://wiki.arch
 
 ----
 
-### Users & Passwords
+### Users and Passwords
 create a new user
 
 > $ `useradd -m <username>`
