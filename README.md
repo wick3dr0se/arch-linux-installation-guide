@@ -37,7 +37,7 @@ if the system can access linux commands, use [dd](https://wiki.archlinux.org/tit
 
 the 'of' path should be replaced with the destination to the usb/sd card; insert the device and use [lsblk](https://wiki.archlinux.org/title/Lsblk#lsblk) to check path. it should be something like 'sdb'
 
-> # `dd bs=4M if=/<path>/<to>/<archlinux>.iso of=/dev/<sdx> status=progress && sync`
+>  **#**&ensp; `dd bs=4M if=/<path>/<to>/<archlinux>.iso of=/dev/<sdx> status=progress && sync`
 
 when a bootable image has sucessfully been created from the iso, attach the device and boot into the live enviornment. 
 
@@ -48,7 +48,7 @@ secure boot must be disabled from the system [bios](https://en.m.wikipedia.org/w
 ### Verify Boot Mode
 list the efivars direcrory
 
-> # `ls /sys/firmware/efi/efivars`
+> **#**&ensp; `ls /sys/firmware/efi/efivars`
 
 if the command returns the directory without error, then the system is booted in [uefi](https://wiki.archlinux.org/title/UEFI). if the directory doesn't exist the system may be booted in [bios](https://wiki.archlinux.org/title/Arch_boot_process#Under_BIOS) or [csm](https://en.wikipedia.org/wiki/Compatibility_Support_Module) mode
 
@@ -57,7 +57,7 @@ if the command returns the directory without error, then the system is booted in
 ### Initial Network Setup
 check if the [network interface](https://wiki.archlinux.org/title/Network_interface#Network_interfaces) is enabled with [iplink](https://man.archlinux.org/man/ip-link.8)
 
-> # `ip link`
+> **#**&ensp; `ip link`
 
 if disabled, check the device driver -- see [ethernet#device-driver](https://wiki.archlinux.org/title/Network_configuration/Ethernet#Device_driver) or [wireless#device-driver](https://wiki.archlinux.org/title/Network_configuration/Wireless#Device_driver)
 #### *_Ethernet_
@@ -65,36 +65,36 @@ just plug in the ethernet cable
 #### *_Wi-Fi_
 for wlan & wwan, make sure the card isn't blocked with [rfkill](https://wiki.archlinux.org/title/Network_configuration/Wireless#Rfkill_caveat)
 
-> # `rfkill list`
+> **#**&ensp; `rfkill list`
 
 *if the card is soft-blocked by the kernel, use this command:
 
-> # `rfkill unblock wifi`
+> **#**&ensp; `rfkill unblock wifi`
 
 the card could be hard-blocked if their is a hardware button or switch, e.g. a laptop. Make sure this is enabled.
  
 authenticate to a wireless network in an [iwd](https://wiki.archlinux.org/title/Iwctl) interactive prompt
 
-> # `iwctl`
+> **#**&ensp; `iwctl`
 
 list all wireless devices
 
-> [iwd]# `device list`
+> [iwd]**#**&ensp; `device list`
 
 scan for networks
 
-> [iwd]# `station <device> scan`
+> [iwd]**#**&ensp; `station <device> scan`
 
 list scanned networks
 
-> [iwd]# `station <device> get-networks`
+> [iwd]**#**&ensp; `station <device> get-networks`
 
 finally, connect to specified network
 
-> [iwd]# `station <device> connect <SSID>`
+> [iwd]**#**&ensp; `station <device> connect <SSID>`
 
 verify connection
-> [iwd]# `station <device> show`
+> [iwd]**#**&ensp; `station <device> show`
 
 exit prompt using ctrl+c
 
@@ -103,11 +103,11 @@ exit prompt using ctrl+c
 ### System Clock
 set system clock [timedatectl](https://man.archlinux.org/man/timedatectl.1)
 
-> # `timedatectl set-ntp true`
+> **#**&ensp; `timedatectl set-ntp true`
 
 check status
 
-> # `timedatectl status`
+> **#**&ensp; `timedatectl status`
 
 ----
 
@@ -129,91 +129,91 @@ In order to create a [swap](https://wiki.archlinux.org/title/Partitioning_tools#
 
 to create a swapfile use dd. the following command will create a 4gb swapfile 
 
-> # `dd if=/dev/zero of=/swapfile bs=1M count=<4096> status=progress`
+> **#**&ensp; `dd if=/dev/zero of=/swapfile bs=1M count=<4096> status=progress`
 
 a swapfile without the correct permissions is a big security risk. set the file permissions to 600 with [chmod](https://wiki.archlinux.org/title/File_permissions_and_attributes#Changing_permissions)
 
-> # `chmod 600 /swapfile`
+> **#**&ensp; `chmod 600 /swapfile`
 
 ----
 
 #### *_Swap Partition_
 if a swap partition was made, format it by replacing 'swap_partition' with it's  assigned block device path, e.g. sda2
 
-> # `mkswap /dev/<swap_partition>`
+> **#**&ensp; `mkswap /dev/<swap_partition>`
 
 then activate it
 
-> # `swapon /dev/<swap_partition>`
+> **#**&ensp; `swapon /dev/<swap_partition>`
 
 ----
 
 #### *_Swapfile_
 if a swapfile was made, format it
 
-> # `mkswap /swapfile`
+> **#**&ensp; `mkswap /swapfile`
 
 then activate it
 
-> # `swapon /swapfile`
+> **#**&ensp; `swapon /swapfile`
 
 ----
 
 ### Format Partitions
 format the root partition just created with preferred [filesystem](https://wiki.archlinux.org/title/File_systems) and replace 'root_partition' with it's assigned [block device](https://en.m.wikipedia.org/wiki/Device_file#Block_devices) path, e.g. sda3
 
-> # `mkfs.<ext4> /dev/<root_partition>`
+> **#**&ensp; `mkfs.<ext4> /dev/<root_partition>`
 
 format the boot partition by replacing 'efi_partition' with it's assigned block device path, e.g. sda1
 
-> # `mkfs.vfat -F32 /dev/<efi_partition>`
+> **#**&ensp; `mkfs.vfat -F32 /dev/<efi_partition>`
 
 ----
 
 ### Mount Partitions
 [mount](https://wiki.archlinux.org/title/Mount) root partition to /mnt
 
-> # `mount /dev/<root_partition> /mnt`
+> **#**&ensp; `mount /dev/<root_partition> /mnt`
 
 mount efi [partition](https://wiki.archlinux.org/title/Partitioning#Example_layouts) to [/boot](https://wiki.archlinux.org/title/Partitioning#/boot)
 
-> # `mount /dev/<efi_partition> /mnt/boot`
+> **#**&ensp; `mount /dev/<efi_partition> /mnt/boot`
 
 ----
 
 ### Install Essential Packages
 [pacstrap](https://man.archlinux.org/man/pacstrap.8) base, [kernel](https://wiki.archlinux.org/title/Kernel) choice and if the system has an amd or intel cpu, install the coinciding [microcode](https://wiki.archlinux.org/title/Microcode) updates
 
-> # `pacstrap /mnt base linux linux-firmware nano sudo <cpu_manufacturer>-ucode`
+> **#**&ensp; `pacstrap /mnt base linux linux-firmware nano sudo <cpu_manufacturer>-ucode`
 
 ----
 
 ### Fstab
 generate an [fstab](https://wiki.archlinux.org/title/Fstab) file from detected mounted block devices, defined by labels
 
-> # `genfstab -L /mnt >> /mnt/etc/fstab`
+> **#**&ensp; `genfstab -L /mnt >> /mnt/etc/fstab`
 
 check generated fstab
 
-> # `cat /mnt/etc/fstab`
+> **#**&ensp; `cat /mnt/etc/fstab`
 
 ----
 
 ### Change Root
 [chroot](https://wiki.archlinux.org/title/Change_root) into freshly installed system
 
-> # `arch-chroot /mnt`
+> **#**&ensp; `arch-chroot /mnt`
 
 ----
 
 ### Time Zone
 set [time zone](https://wiki.archlinux.org/title/Time_zone)
 
-> # `ln -sf /usr/share/zoneinfo/<region>/<city> /etc/localtime`
+> **#**&ensp; `ln -sf /usr/share/zoneinfo/<region>/<city> /etc/localtime`
 
 generate /etc/adjtime with [hwclock](https://man.archlinux.org/man/hwclock.8)
 
-> # `hwclock --systohc`
+> **#**&ensp; `hwclock --systohc`
 
 *this assumes the hardware clock is set to [utc](https://en.m.wikipedia.org/wiki/UTC). for more, see [system time#time standard](https://wiki.archlinux.org/title/System_time#Time_standard)
 
@@ -222,7 +222,7 @@ generate /etc/adjtime with [hwclock](https://man.archlinux.org/man/hwclock.8)
 ### Localization
 [edit](https://wiki.archlinux.org/title/Textedit) /etc/locale.gen and un-[comment](https://linuxhint.com/bash_comments/) 'en_US.UTF-8 UTF-8' or any other necessary [locales](https://wiki.archlinux.org/title/Locale) by removing the '#'
 
-> # `nano /etc/locale.gen`
+> **#**&ensp; `nano /etc/locale.gen`
 
 use ctrl+x then 'y' to save and close [nano](https://wiki.archlinux.org/title/Nano). 
 
@@ -230,22 +230,22 @@ use ctrl+x then 'y' to save and close [nano](https://wiki.archlinux.org/title/Na
 
 generate the locales
 
-> # `locale-gen`
+> **#**&ensp; `locale-gen`
 
 [create](https://wiki.archlinux.org/title/Textedit) the [locale.conf](https://man.archlinux.org/man/locale.conf.5) file and set the [system locale](https://wiki.archlinux.org/title/Locale#Setting_the_system_locale) 
 
-> # `echo LANG=en_US.UTF-8 >> /etc/locale.conf`
+> **#**&ensp; `echo LANG=en_US.UTF-8 >> /etc/locale.conf`
 
 ----
 
 ### Network Configuration
 create [hostname](https://wiki.archlinux.org/title/Hostname) file
 
-> # `echo <hostname> >> /etc/hostname`
+> **#**&ensp; `echo <hostname> >> /etc/hostname`
 
 add matching entries to [hosts](https://man.archlinux.org/man/hosts.5)
 
-> # `nano /etc/hosts`
+> **#**&ensp; `nano /etc/hosts`
 ```diff
 127.0.0.1    localhost  
 ::1          localhost  
@@ -261,15 +261,15 @@ install any desired [network managment](https://wiki.archlinux.org/title/Network
 #### *_Systemd-networkd_ 
 connect to the network with [wpa_passphrase](https://wiki.archlinux.org/title/Wpa_supplicant#Connecting_with_wpa_passphrase)
 
-> # `wpa_passphrase <ssid> <password> > /etc/wpa_supplicant/wpa_supplicant-<interface>.conf`
+> **#**&ensp; `wpa_passphrase <ssid> <password> > /etc/wpa_supplicant/wpa_supplicant-<interface>.conf`
 
 [enable & start](https://wiki.archlinux.org/title/Start/enable) the wpa_supplicant daemon reading the config file just created
 
-> # `systemctl enable --now wpa_supplicant@<interface>`
+> **#**&ensp; `systemctl enable --now wpa_supplicant@<interface>`
 
 setup systemd-networkd for wireless networking
 
-> # `nano /etc/systemd/network/25-wireless.network`
+> **#**&ensp; `nano /etc/systemd/network/25-wireless.network`
 ```diff
 [Match]
 Name=<interface>
@@ -279,7 +279,7 @@ DHCP=yes
 ```
 enable and start the systemd-network service daemon
 
-> # `systemctl enable --now systemd-networkd`
+> **#**&ensp; `systemctl enable --now systemd-networkd`
 
 for a static connection -- see [#static](https://wiki.archlinux.org/title/Systemd-networkd#Wired_adapter_using_a_static_IP). for ethernet -- see [#wired adapter](https://wiki.archlinux.org/title/Systemd-networkd#Wired_adapter_using_DHCP)
 
@@ -288,11 +288,11 @@ for a static connection -- see [#static](https://wiki.archlinux.org/title/System
 #### *_NetworkManager_
 install [networkmanager](https://wiki.archlinux.org/title/NetworkManager)
 
-> # `pacman -S NetworkManager`
+> **#**&ensp; `pacman -S NetworkManager`
 
 enable and start it
 
-> # `systemctl enable --now NetworkManager`
+> **#**&ensp; `systemctl enable --now NetworkManager`
 
 ----
 
@@ -301,34 +301,34 @@ creating an initramfs image isn't necessary since [mkinitcpio](https://wiki.arch
 
 *for [lvm](https://wiki.archlinux.org/title/Install_Arch_Linux_on_LVM#Adding_mkinitcpio_hooks), [system encryption](https://wiki.archlinux.org/title/Dm-crypt) or [raid](https://wiki.archlinux.org/title/RAID#Configure_mkinitcpio) modify [mkinitcpio.conf](https://man.archlinux.org/man/mkinitcpio.conf.5) then recreate the initramfs image
 
-> # `mkinitcpio -P`
+> **#**&ensp; `mkinitcpio -P`
 
 ----
 
 ### Users and Passwords
 create a new user
 
-> # `useradd -m <username>`
+> **#**&ensp; `useradd -m <username>`
 
 add created user to the wheel group
 
-> # `usermod -aG wheel <username>`
+> **#**&ensp; `usermod -aG wheel <username>`
 
 uncomment '%wheel', by removing the '#'
 
-> # `EDITOR=nano visudo`
+> **#**&ensp; `EDITOR=nano visudo`
 
 set created user [password](https://wiki.archlinux.org/title/Password)
 
-> # `passwd <username>`
+> **#**&ensp; `passwd <username>`
 
 set [root user](https://wiki.archlinux.org/title/Root_user) password
 
-> # `passwd`
+> **#**&ensp; `passwd`
 
 optionally, disable access to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), locking password entry for root user. this will give the system increased security and a user can still be elevated in the wheel group to superuser priveleges with [sudo](https://wiki.archlinux.org/title/Sudo) and [su](https://wiki.archlinux.org/title/Su) commands
 
-> # `passwd -l root`
+> **#**&ensp; `passwd -l root`
 
 ----
 
@@ -342,11 +342,11 @@ do not install two different boot loaders on the same system. it will cause many
 #### *_Systemd-boot_
 install [systemd-boot](https://wiki.archlinux.org/title/Systemd-boot) in the efi system partition
 
-> # `bootctl --path=/boot install`
+> **#**&ensp; `bootctl --path=/boot install`
 
 add a [boot entry](https://wiki.archlinux.org/title/Systemd-boot#Adding_loaders) and load installed microcode updates
 
-> # `nano /boot/loader/entries/<entry>.conf`
+> **#**&ensp; `nano /boot/loader/entries/<entry>.conf`
 ```diff
 title <Arch Linux>  
 linux /vmlinuz-linux  
@@ -359,7 +359,7 @@ if a different kernel was installed such as linux-zen, you would add '-zen' abov
 
 edit [loader config](https://man.archlinux.org/man/loader.conf.5)
 
-> # `nano /boot/loader/loader.conf`
+> **#**&ensp; `nano /boot/loader/loader.conf`
 ```diff
 default <entry>.conf  
 timeout <3>  
@@ -369,36 +369,36 @@ editor <no>
 
 verify entry is bootable
 
-> # `bootctl list`
+> **#**&ensp; `bootctl list`
 
 ----
 
 #### *_GRUB_
 install [grub](https://wiki.archlinux.org/title/GRUB). also, install  [os-prober](https://archlinux.org/packages/?name=os-prober) to automatically add boot entries for other operating systems
 
-> # `pacman -S grub efibootmgr os-prober`
+> **#**&ensp; `pacman -S grub efibootmgr os-prober`
 
 ##### *_for systems booted in uefi mode:_
 install [efibootmgr](https://wiki.archlinux.org/title/EFISTUB#efibootmgr)
 
-> # `pacman -S efibootmgr`
+> **#**&ensp; `pacman -S efibootmgr`
 
 install grub to the efi partition
 
-> # `grub-install --target=x86_64-efi --efi-directory=/boot/grub --bootloader-id=GRUB`
+> **#**&ensp; `grub-install --target=x86_64-efi --efi-directory=/boot/grub --bootloader-id=GRUB`
 
 ##### *_othwerwise, if booted in bios mode; where path is the entire disk, not just a partition or path to a directory_
 install grub to the disk
 
-> # `grub-install --target=i386-pc /dev/sdx`
+> **#**&ensp; `grub-install --target=i386-pc /dev/sdx`
 
 generate the [grub config](https://wiki.archlinux.org/title/GRUB#Configuration) file. this will automatically detect the arch linux installation
 
-> # `grub-mkconfig -o /boot/grub/grub.cfg`
+> **#**&ensp; `grub-mkconfig -o /boot/grub/grub.cfg`
 
 *if a warning that os-prober will not be executed appears then, un-comment 'GRUB_DISABLE_OS_PROBER=false' by removing the '#'
 
-> # `nano /etc/default/grub`
+> **#**&ensp; `nano /etc/default/grub`
 
 ----
 
@@ -407,8 +407,8 @@ exit chroot using ctrl+d
 
 unmount all partitions; check if busy
 
-> # `unmount -R /mnt`
+> **#**&ensp; `unmount -R /mnt`
 
 reboot the system
 
-> # `reboot`
+> **#**&ensp; `reboot`
