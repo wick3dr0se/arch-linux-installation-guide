@@ -60,18 +60,18 @@ check if the [network interface](https://wiki.archlinux.org/title/Network_interf
 > **#**&ensp; `ip link`
 
 if disabled, check the device driver -- see [ethernet#device-driver](https://wiki.archlinux.org/title/Network_configuration/Ethernet#Device_driver) or [wireless#device-driver](https://wiki.archlinux.org/title/Network_configuration/Wireless#Device_driver)
-#### _* Ethernet_
+#### _Ethernet_
 just plug in the ethernet cable
-#### _* Wi-Fi_
+#### _Wi-Fi_
 make sure the card isn't blocked with [rfkill](https://wiki.archlinux.org/title/Network_configuration/Wireless#Rfkill_caveat)
 
 > **#**&ensp; `rfkill list`
 
-*if the card is soft-blocked by the kernel, use this command:
+if the card is soft-blocked by the kernel, use this command:
 
 > **#**&ensp; `rfkill unblock wifi`
 
-the card could be hard-blocked if their is a hardware button or switch, e.g. a laptop. Make sure this is enabled.
+the card could be hard-blocked if their is a hardware button or switch, e.g. a laptop. make sure this is enabled.
  
 authenticate to a wireless network in an [iwd](https://wiki.archlinux.org/title/Iwctl) interactive prompt
 
@@ -98,7 +98,7 @@ verify connection
 
 exit prompt using ctrl+c
 
-_* for wwan (mobile broadband) -- see [nmcli](https://wiki.archlinux.org/title/Mobile_broadband_modem#ModemManager)_
+_° for wwan (mobile broadband) -- see [nmcli](https://wiki.archlinux.org/title/Mobile_broadband_modem#ModemManager)_
 
 ----
 
@@ -118,20 +118,22 @@ list disk and block devices
 
 > **#**&ensp; `lsblk`
  
-using the most desirable [partitioning](https://wiki.archlinux.org/title/Partition) tool([gdisk](https://wiki.archlinux.org/title/Gdisk), [fdisk](https://wiki.archlinux.org/title/Fdisk), [parted](https://wiki.archlinux.org/title/parted), etc) for your system, create the required [root](https://wiki.archlinux.org/title/Root_directory#/)(10GB+) [partition](https://wiki.archlinux.org/title/Root_directory). if booted in uefi, create an  [efi](https://wiki.archlinux.org/title/EFI_system_partition)(512MB) [system partition](https://wiki.archlinux.org/title/EFI_system_partition); not necessary for bios with [mbr](https://wiki.archlinux.org/title/MBR#Master_Boot_Record)
+using the most desirable [partitioning](https://wiki.archlinux.org/title/Partition) tool([gdisk](https://wiki.archlinux.org/title/Gdisk), [fdisk](https://wiki.archlinux.org/title/Fdisk), [parted](https://wiki.archlinux.org/title/parted), etc) for your system, create a new gpt or mbr partition table, if one does not exist. a gpt table is required in uefi mode; an mbr table is required if the system is booted in legacy bios mode
+ 
+ if booted in uefi, create an  [efi](https://wiki.archlinux.org/title/EFI_system_partition)(512MB) [system partition](https://wiki.archlinux.org/title/EFI_system_partition); not necessary for legacy bios systems. create the required [root](https://wiki.archlinux.org/title/Root_directory#/)(10GB+) [partition](https://wiki.archlinux.org/title/Root_directory).
 
-_* if the system has an existing efi partition, don't create a new one. do not format it or all data on the partition will be lost, rendering other operating systems potentially un-bootable. skip 'mkfs.vfat' command below and mount the already existing efi partition if available_
+if the system has an existing efi partition, don't create a new one. do not format it or all data on the partition will be lost, rendering other operating systems potentially un-bootable. skip the 'mkfs.vfat' command in the [format partitions](#format-partitions) section below and mount the already existing efi partition if available
 
-_* to create any stacked block devices for [lvm](https://wiki.archlinux.org/title/LVM), [system encryption](https://wiki.archlinux.org/title/Dm-crypt) or [raid](https://wiki.archlinux.org/title/RAID), do it now_
+to create any stacked block devices for [lvm](https://wiki.archlinux.org/title/LVM), [system encryption](https://wiki.archlinux.org/title/Dm-crypt) or [raid](https://wiki.archlinux.org/title/RAID), do it now
 
 ----
 
-### Swap Space (Optional)
+### _Swap Space_
 In order to create a [swap](https://wiki.archlinux.org/title/Partitioning_tools#Swap) consider creating either a [swap partition](https://wiki.archlinux.org/title/Swap#Swap_partition) or a [swapfile](https://wiki.archlinux.org/title/Swap#Swap_file) now. to share the [swap space](https://wiki.archlinux.org/title/Swap_file#Swap_space) system-wide with other operating systems or enable hibernation; create a linux swap partition. in comparison, a swapfile can change size on-the-fly and is more easily removed, which may be more desirable for a modestly-sized ssd
 
 ----
 
-#### _* Swap Partition_
+#### _Swap Partition_
 if a swap partition was made, format it by replacing 'swap_partition' with it's  assigned block device path, e.g. sda2
 
 > **#**&ensp; `mkswap /dev/<swap_partition>`
@@ -142,7 +144,7 @@ then activate it
 
 ----
 
-#### _* Swapfile_
+#### _Swapfile_
 to create a swapfile instead, use dd. the following command will create a 4gb swapfile 
 
 > **#**&ensp; `dd if=/dev/zero of=/swapfile bs=1M count=<4096> status=progress`
@@ -166,7 +168,7 @@ format the root partition just created with preferred [filesystem](https://wiki.
 
 > **#**&ensp; `mkfs.<ext4> /dev/<root_partition>`
 
-format the boot partition by replacing 'efi_partition' with it's assigned block device path, e.g. sda1
+for uefi systems, if an efi partition was created, format it by replacing 'efi_partition' with it's assigned block device path, e.g. sda1
 
 > **#**&ensp; `mkfs.vfat -F32 /dev/<efi_partition>`
 
@@ -177,7 +179,7 @@ format the boot partition by replacing 'efi_partition' with it's assigned block 
 
 > **#**&ensp; `mount /dev/<root_partition> /mnt`
 
-mount efi [partition](https://wiki.archlinux.org/title/Partitioning#Example_layouts) to [/boot](https://wiki.archlinux.org/title/Partitioning#/boot)
+if created, mount the efi system [partition](https://wiki.archlinux.org/title/Partitioning#Example_layouts) to [/boot](https://wiki.archlinux.org/title/Partitioning#/boot)
 
 > **#**&ensp; `mount /dev/<efi_partition> /mnt/boot`
 
@@ -191,7 +193,7 @@ mount efi [partition](https://wiki.archlinux.org/title/Partitioning#Example_layo
 ----
 
 ### Fstab
-generate an [fstab](https://wiki.archlinux.org/title/Fstab) file from detected mounted block devices, defined by labels
+generate an [fstab](https://wiki.archlinux.org/title/Fstab) file from detected mounted block devices, defined by labels. _° use '-U' argument to define with UUID's instead_
 
 > **#**&ensp; `genfstab -L /mnt >> /mnt/etc/fstab`
 
@@ -217,7 +219,7 @@ generate /etc/adjtime with [hwclock](https://man.archlinux.org/man/hwclock.8)
 
 > **#**&ensp; `hwclock --systohc`
 
-_* this assumes the hardware clock is set to [utc](https://en.m.wikipedia.org/wiki/UTC). for more, see [system time#time standard](https://wiki.archlinux.org/title/System_time#Time_standard)_
+_° this assumes the hardware clock is set to [utc](https://en.m.wikipedia.org/wiki/UTC). for more, see [system time#time standard](https://wiki.archlinux.org/title/System_time#Time_standard)_
 
 ----
 
@@ -228,7 +230,7 @@ _* this assumes the hardware clock is set to [utc](https://en.m.wikipedia.org/wi
 
 use ctrl+x then 'y' to save and close [nano](https://wiki.archlinux.org/title/Nano). 
 
-_* for a different editor -- see [documents#editors](https://wiki.archlinux.org/title/List_of_applications/Documents#Text_editors)_
+_° for a different editor -- see [documents#editors](https://wiki.archlinux.org/title/List_of_applications/Documents#Text_editors)_
 
 generate the locales
 
@@ -254,13 +256,13 @@ add matching entries to [hosts](https://man.archlinux.org/man/hosts.5)
 127.0.1.1    <hostname>.localdomain <hostname>
 ```
 
-_* if the system has a permanently assigned ip address, use it instead of '127.0.1.1'_
+_° if the system has a permanently assigned ip address, use it instead of '127.0.1.1'_
 
 install any desired [network managment](https://wiki.archlinux.org/title/Network_configuration) software. for this guide [systemd-networkd](https://wiki.archlinux.org/title/Systemd-networkd) is used by example. for an easier, configureless setup -- check out networkmanager just below
 
 ----
 
-#### _* Systemd-networkd_ 
+#### _Systemd-networkd_ 
 connect to the network with [wpa_passphrase](https://wiki.archlinux.org/title/Wpa_supplicant#Connecting_with_wpa_passphrase)
 
 > **#**&ensp; `wpa_passphrase <ssid> <password> > /etc/wpa_supplicant/wpa_supplicant-<interface>.conf`
@@ -283,11 +285,11 @@ enable and start the systemd-network service daemon
 
 > **#**&ensp; `systemctl enable --now systemd-networkd`
 
-_* for a static connection -- see [#static](https://wiki.archlinux.org/title/Systemd-networkd#Wired_adapter_using_a_static_IP); for ethernet -- see [#wired adapter](https://wiki.archlinux.org/title/Systemd-networkd#Wired_adapter_using_DHCP)_
+_° for a static connection -- see [#static](https://wiki.archlinux.org/title/Systemd-networkd#Wired_adapter_using_a_static_IP); for ethernet -- see [#wired adapter](https://wiki.archlinux.org/title/Systemd-networkd#Wired_adapter_using_DHCP)_
 
 ----
 
-#### _* NetworkManager_
+#### _NetworkManager_
 install [networkmanager](https://wiki.archlinux.org/title/NetworkManager)
 
 > **#**&ensp; `pacman -S NetworkManager`
@@ -298,16 +300,16 @@ enable and start it
 
 ----
 
-### _* Initramfs_
-creating an initramfs image isn't necessary since [mkinitcpio](https://wiki.archlinux.org/title/Mkinitcpio) was ran when pacstrap installed the kernel
+### _Initramfs_
+_° creating an initramfs image isn't necessary since [mkinitcpio](https://wiki.archlinux.org/title/Mkinitcpio) was ran when pacstrap installed the kernel_
 
-_* for [lvm](https://wiki.archlinux.org/title/Install_Arch_Linux_on_LVM#Adding_mkinitcpio_hooks), [system encryption](https://wiki.archlinux.org/title/Dm-crypt) or [raid](https://wiki.archlinux.org/title/RAID#Configure_mkinitcpio) modify [mkinitcpio.conf](https://man.archlinux.org/man/mkinitcpio.conf.5) then recreate the initramfs image_
+for [lvm](https://wiki.archlinux.org/title/Install_Arch_Linux_on_LVM#Adding_mkinitcpio_hooks), [system encryption](https://wiki.archlinux.org/title/Dm-crypt) or [raid](https://wiki.archlinux.org/title/RAID#Configure_mkinitcpio) modify [mkinitcpio.conf](https://man.archlinux.org/man/mkinitcpio.conf.5) then recreate the initramfs image with:
 
 > **#**&ensp; `mkinitcpio -P`
 
 ----
 
-### Users and Passwords
+### •Users and Passwords
 create a new user
 
 > **#**&ensp; `useradd -m <username>`
@@ -328,20 +330,18 @@ set [root user](https://wiki.archlinux.org/title/Root_user) password
 
 > **#**&ensp; `passwd`
 
-optionally, disable access to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), locking password entry for root user. this will give the system increased security and a user can still be elevated in the wheel group to superuser priveleges with [sudo](https://wiki.archlinux.org/title/Sudo) and [su](https://wiki.archlinux.org/title/Su) commands
+disable login to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), locking password entry for root user. this will give the system increased security and a user can still be elevated within the wheel group to superuser priveleges with [sudo](https://wiki.archlinux.org/title/Sudo) and [su](https://wiki.archlinux.org/title/Su) commands
 
 > **#**&ensp; `passwd -l root`
 
 ----
 
-### Boot Loader
+### •Boot Loader 
 install a linux-capable [boot loader](https://wiki.archlinux.org/title/Boot_loader). for simplicity and ease-of-use I recommend systemd-boot, not grub for uefi. systemd-boot is not compatible with systems booted in legacy bios mode. systemd-boot will boot any configured efi image including windows.
-
-do not install two different boot loaders on the same system. it will cause many conflicts. if you are familiar with grub and it works for you, skip systemd-boot or vice-versa
 
 ----
 
-#### _* Systemd-boot_
+#### _Systemd-boot_
 install [systemd-boot](https://wiki.archlinux.org/title/Systemd-boot) in the efi system partition
 
 > **#**&ensp; `bootctl --path=/boot install`
@@ -357,7 +357,7 @@ initrd /initramfs-linux.img
 options root=/dev/<root_partition> rw quiet log-level=0
 ```
 
-_* if a different kernel was installed such as linux-zen, you would add '-zen' above to 'vmlinuz-linux' and 'initframs-linux'. this will boot the system using the selected kernel. for more -- see [kernel paramters](https://wiki.archlinux.org/title/Kernel_parameters#systemd-boot)_ 
+_° if a different kernel was installed such as linux-zen, you would add '-zen' above to 'vmlinuz-linux' and 'initframs-linux'. this will boot the system using the selected kernel. for more -- see [kernel paramters](https://wiki.archlinux.org/title/Kernel_parameters#systemd-boot)_ 
 
 edit [loader config](https://man.archlinux.org/man/loader.conf.5)
 
@@ -375,13 +375,13 @@ verify entry is bootable
 
 ----
 
-#### _* GRUB_
+#### _GRUB_
 install [grub](https://wiki.archlinux.org/title/GRUB). also, install  [os-prober](https://archlinux.org/packages/?name=os-prober) to automatically add boot entries for other operating systems
 
 > **#**&ensp; `pacman -S grub efibootmgr os-prober`
 
-##### _* for systems booted in uefi mode:_
-install [efibootmgr](https://wiki.archlinux.org/title/EFISTUB#efibootmgr)
+_° **for systems booted in uefi mode,
+install [efibootmgr](https://wiki.archlinux.org/title/EFISTUB#efibootmgr)**_
 
 > **#**&ensp; `pacman -S efibootmgr`
 
@@ -389,7 +389,7 @@ install grub to the efi partition
 
 > **#**&ensp; `grub-install --target=x86_64-efi --efi-directory=/boot/grub --bootloader-id=GRUB`
 
-##### _* othwerwise, if booted in bios mode; where path is the entire disk, not just a partition or path to a directory_
+#### _othwerwise, if booted in bios mode; where path is the entire disk, not just a partition or path to a directory_
 install grub to the disk
 
 > **#**&ensp; `grub-install --target=i386-pc /dev/sdx`
@@ -398,7 +398,7 @@ generate the [grub config](https://wiki.archlinux.org/title/GRUB#Configuration) 
 
 > **#**&ensp; `grub-mkconfig -o /boot/grub/grub.cfg`
 
-_* if a warning that os-prober will not be executed appears then, un-comment 'GRUB_DISABLE_OS_PROBER=false' by removing the '#'_
+_° if a warning that os-prober will not be executed appears then, un-comment 'GRUB_DISABLE_OS_PROBER=false' by removing the '#'_
 
 > **#**&ensp; `nano /etc/default/grub`
 
