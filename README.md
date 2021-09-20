@@ -11,7 +11,7 @@
     * [Wi-Fi](#wi-fi)
 * [System Clock](#system-clock)
 * [Disk Partitioning](#disk-partitioning)
-* [Swap Space (Optional)](#swap-space-optional)
+* [Swap Space](#swap-space)
     * [Swap Partition](#swap-partition)
     * [Swapfile](#swapfile)
 * [Format Partitions](#format-partitions)
