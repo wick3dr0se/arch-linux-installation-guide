@@ -309,7 +309,7 @@ for [lvm](https://wiki.archlinux.org/title/Install_Arch_Linux_on_LVM#Adding_mkin
 
 ----
 
-### •Users and Passwords
+### Users and Passwords
 create a new user
 
 > **#**&ensp; `useradd -m <username>`
@@ -336,7 +336,7 @@ disable login to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), lo
 
 ----
 
-### •Boot Loader 
+### Boot Loader 
 install a linux-capable [boot loader](https://wiki.archlinux.org/title/Boot_loader). for simplicity and ease-of-use I recommend systemd-boot, not grub for uefi. systemd-boot is not compatible with systems booted in legacy bios mode. systemd-boot will boot any configured efi image including windows.
 
 ----
@@ -389,7 +389,8 @@ install grub to the efi partition
 
 > **#**&ensp; `grub-install --target=x86_64-efi --efi-directory=/boot/grub --bootloader-id=GRUB`
 
-#### _othwerwise, if booted in bios mode; where path is the entire disk, not just a partition or path to a directory_
+  _° **othwerwise, if booted in bios mode; where path is the entire disk, not just a partition or path to a directory**_
+  
 install grub to the disk
 
 > **#**&ensp; `grub-install --target=i386-pc /dev/sdx`
