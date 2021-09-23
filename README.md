@@ -1,4 +1,4 @@
-![Arch Linux](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png){:width="100"}
+![Arch Linux](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png)
 ## Arch Linux Installation Guide
 #### The goal of this Arch Linux installation guide is to provide an easier to interpret, while still chomprehensive how-to for installing Arch Linux on x86_64 architecture devices. This guide  assumes you are technically inclined and have a basic understanding of Linux. This installation guide was made with intentions of sticking to systemd (systemd-boot, systemd-networkd). Just because of the sheer amount of options and prefrences for networking tools & boot loaders, instructions for NetworkManager & GRUB were included to their respective sections as well. 
 ###### This guide is a mix of knowledge and information from the [ArchWiki](https://wiki.archlinux.org/title/Installation_guide)
