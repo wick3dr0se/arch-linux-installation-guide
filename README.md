@@ -1,4 +1,4 @@
-![Arch Linux](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png)
+![Arch Linux](https://archlinux.org/static/logos/archlinux-logo-dark-90dpi.ebdee92a15b3.png){:width="100"}
 ## Arch Linux Installation Guide
 #### The goal of this Arch Linux installation guide is to provide an easier to interpret, while still chomprehensive how-to for installing Arch Linux on x86_64 architecture devices. This guide  assumes you are technically inclined and have a basic understanding of Linux. This installation guide was made with intentions of sticking to systemd (systemd-boot, systemd-networkd). Just because of the sheer amount of options and prefrences for networking tools & boot loaders, instructions for NetworkManager & GRUB were included to their respective sections as well. 
 ###### This guide is a mix of knowledge and information from the [ArchWiki](https://wiki.archlinux.org/title/Installation_guide)
@@ -193,9 +193,9 @@ if created, mount the efi system [partition](https://wiki.archlinux.org/title/Pa
 ----
 
 ### Fstab
-generate an [fstab](https://wiki.archlinux.org/title/Fstab) file from detected mounted block devices, defined by labels. _° use '-U' argument to define with UUID's instead_
+generate an [fstab](https://wiki.archlinux.org/title/Fstab) file from detected mounted block devices, defined by uuid's
 
-> **#**&ensp; `genfstab -L /mnt >> /mnt/etc/fstab`
+> **#**&ensp; `genfstab -U /mnt >> /mnt/etc/fstab`
 
 check generated fstab
 
@@ -379,21 +379,23 @@ verify entry is bootable
 install [grub](https://wiki.archlinux.org/title/GRUB). also, install  [os-prober](https://archlinux.org/packages/?name=os-prober) to automatically add boot entries for other operating systems
 
 > **#**&ensp; `pacman -S grub efibootmgr os-prober`
-
-_° **for systems booted in uefi mode,
-install [efibootmgr](https://wiki.archlinux.org/title/EFISTUB#efibootmgr)**_
+#### _° UEFI_
+for systems booted in uefi mode,
+install [efibootmgr](https://wiki.archlinux.org/title/EFISTUB#efibootmgr)
 
 > **#**&ensp; `pacman -S efibootmgr`
 
-install grub to the efi partition
+and install grub to the efi partition
 
 > **#**&ensp; `grub-install --target=x86_64-efi --efi-directory=/boot/grub --bootloader-id=GRUB`
-
-  _° **othwerwise, if booted in bios mode; where path is the entire disk, not just a partition or path to a directory**_
-  
+----
+#### _° BIOS_
+othwerwise, if booted in bios mode; where path is the entire disk, not just a partition or path to a directory
 install grub to the disk
 
 > **#**&ensp; `grub-install --target=i386-pc /dev/sdx`
+
+----
 
 generate the [grub config](https://wiki.archlinux.org/title/GRUB#Configuration) file. this will automatically detect the arch linux installation
 
