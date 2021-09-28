@@ -33,7 +33,7 @@
 
 ---
 ### Live Media Creation
-if the system can access linux commands, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable installation image on a usb/sd card from the downloaded [iso](https://archlinux.org/download/). there are several options -- for more, see how to  create an installer image, [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
+if a system with access to linux commands is available, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable arch linux installation image on a usb/sd card from the downloaded [iso](https://archlinux.org/download/). there are several options -- for more, see how to  create an arch linux installer image, [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
 
 the 'of' path should be replaced with the destination to the usb/sd card; insert the device and use [lsblk](https://wiki.archlinux.org/title/Lsblk#lsblk) to check path. it should be something like 'sdb'
 
@@ -61,7 +61,7 @@ check if the [network interface](https://wiki.archlinux.org/title/Network_interf
 
 if disabled, check the device driver -- see [ethernet#device-driver](https://wiki.archlinux.org/title/Network_configuration/Ethernet#Device_driver) or [wireless#device-driver](https://wiki.archlinux.org/title/Network_configuration/Wireless#Device_driver)
 #### _Ethernet_
-just plug in the ethernet cable
+plug in an ethernet cable
 #### _Wi-Fi_
 make sure the card isn't blocked with [rfkill](https://wiki.archlinux.org/title/Network_configuration/Wireless#Rfkill_caveat)
 
@@ -71,7 +71,7 @@ if the card is soft-blocked by the kernel, use this command:
 
 > **#**&ensp; `rfkill unblock wifi`
 
-the card could be hard-blocked if their is a hardware button or switch, e.g. a laptop. make sure this is enabled.
+the card could be hard-blocked by a hardware button or switch, e.g. a laptop. make sure this is enabled.
  
 authenticate to a wireless network in an [iwd](https://wiki.archlinux.org/title/Iwctl) interactive prompt
 
@@ -94,9 +94,10 @@ finally, connect to specified network
 > [iwd]**#**&ensp; `station <device> connect <SSID>`
 
 verify connection
+
 > [iwd]**#**&ensp; `station <device> show`
 
-exit prompt using ctrl+c
+exit prompt using 'ctrl+c'
 
 _° for wwan (mobile broadband) -- see [nmcli](https://wiki.archlinux.org/title/Mobile_broadband_modem#ModemManager)_
 
@@ -118,7 +119,7 @@ list disk and block devices
 
 > **#**&ensp; `lsblk`
  
-using the most desirable [partitioning](https://wiki.archlinux.org/title/Partition) tool([gdisk](https://wiki.archlinux.org/title/Gdisk), [fdisk](https://wiki.archlinux.org/title/Fdisk), [parted](https://wiki.archlinux.org/title/parted), etc) for your system, create a new gpt or mbr partition table, if one does not exist. a gpt table is required in uefi mode; an mbr table is required if the system is booted in legacy bios mode
+using the most desirable [partitioning](https://wiki.archlinux.org/title/Partition) tool([gdisk](https://wiki.archlinux.org/title/Gdisk), [fdisk](https://wiki.archlinux.org/title/Fdisk), [parted](https://wiki.archlinux.org/title/parted), etc) for your system, create a new gpt or mbr partition table, if one does not exist. a gpt table is required in uefi mode; an mbr table is required if the system is booted in legacy bios mode but a 
  
  if booted in uefi, create an  [efi](https://wiki.archlinux.org/title/EFI_system_partition)(512MB) [system partition](https://wiki.archlinux.org/title/EFI_system_partition); not necessary for legacy bios systems. create the required [root](https://wiki.archlinux.org/title/Root_directory#/)(10GB+) [partition](https://wiki.archlinux.org/title/Root_directory).
 
@@ -129,7 +130,7 @@ to create any stacked block devices for [lvm](https://wiki.archlinux.org/title/L
 ----
 
 ### _Swap Space_
-In order to create a [swap](https://wiki.archlinux.org/title/Partitioning_tools#Swap) consider creating either a [swap partition](https://wiki.archlinux.org/title/Swap#Swap_partition) or a [swapfile](https://wiki.archlinux.org/title/Swap#Swap_file) now. to share the [swap space](https://wiki.archlinux.org/title/Swap_file#Swap_space) system-wide with other operating systems or enable hibernation; create a linux swap partition. in comparison, a swapfile can change size on-the-fly and is more easily removed, which may be more desirable for a modestly-sized ssd
+in order to create a [swap](https://wiki.archlinux.org/title/Partitioning_tools#Swap) consider creating either a [swap partition](https://wiki.archlinux.org/title/Swap#Swap_partition) or a [swapfile](https://wiki.archlinux.org/title/Swap#Swap_file) now. to share the [swap space](https://wiki.archlinux.org/title/Swap_file#Swap_space) system-wide with other operating systems or enable hibernation; create a linux swap partition. in comparison, a swapfile can change size on-the-fly and is more easily removed, which may be more desirable for a modestly-sized ssd
 
 ----
 
@@ -228,7 +229,7 @@ _° this assumes the hardware clock is set to [utc](https://en.m.wikipedia.org/w
 
 > **#**&ensp; `nano /etc/locale.gen`
 
-use ctrl+x then 'y' to save and close [nano](https://wiki.archlinux.org/title/Nano). 
+use ctrl+x then 'y' to save and close [nano](https://wiki.archlinux.org/title/Nano)
 
 _° for a different editor -- see [documents#editors](https://wiki.archlinux.org/title/List_of_applications/Documents#Text_editors)_
 
@@ -263,6 +264,10 @@ install any desired [network managment](https://wiki.archlinux.org/title/Network
 ----
 
 #### _Systemd-networkd_ 
+install wpa_supplicant
+
+> **#**&ensp;`pacman -S wpa_supplicant`
+
 connect to the network with [wpa_passphrase](https://wiki.archlinux.org/title/Wpa_supplicant#Connecting_with_wpa_passphrase)
 
 > **#**&ensp; `wpa_passphrase <ssid> <password> > /etc/wpa_supplicant/wpa_supplicant-<interface>.conf`
@@ -281,7 +286,7 @@ Name=<interface>
 [Network] 
 DHCP=yes
 ```
-enable and start the systemd-network service daemon
+enable and start systemd-network service daemon
 
 > **#**&ensp; `systemctl enable --now systemd-networkd`
 
@@ -294,7 +299,7 @@ install [networkmanager](https://wiki.archlinux.org/title/NetworkManager)
 
 > **#**&ensp; `pacman -S NetworkManager`
 
-enable and start it
+enable and start networkmanager service daemon
 
 > **#**&ensp; `systemctl enable --now NetworkManager`
 
@@ -337,7 +342,7 @@ disable login to [superuser/root](https://en.m.wikipedia.org/wiki/Root_user), lo
 ----
 
 ### Boot Loader 
-install a linux-capable [boot loader](https://wiki.archlinux.org/title/Boot_loader). for simplicity and ease-of-use I recommend systemd-boot, not grub for uefi. systemd-boot is not compatible with systems booted in legacy bios mode. systemd-boot will boot any configured efi image including windows.
+install a linux-capable [boot loader](https://wiki.archlinux.org/title/Boot_loader). for simplicity and ease-of-use I recommend systemd-boot, not grub for uefi. systemd-boot will boot any configured efi image including windows operating systems. systemd-boot is not compatible with systems booted in legacy bios mode
 
 ----
 
