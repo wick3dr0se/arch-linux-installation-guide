@@ -385,7 +385,7 @@ verify entry is bootable
 ### _GRUB_
 install [grub](https://wiki.archlinux.org/title/GRUB). also, install  [os-prober](https://archlinux.org/packages/?name=os-prober) to automatically add boot entries for other operating systems
 
-> **#**&ensp; `pacman -S grub efibootmgr os-prober`
+> **#**&ensp; `pacman -S grub os-prober`
 #### _UEFI_
 for systems booted in uefi mode,
 install [efibootmgr](https://wiki.archlinux.org/title/EFISTUB#efibootmgr)
