@@ -7,31 +7,31 @@ I use Arch BTW
 ---
 
 ### Contents
-1. [Live Media Creation](#live-media-creation)
-2. [Verify Boot Mode](#verify-boot-mode)
-3. [Inital Network Setup](#initial-network-setup)  
-    3.1. [Ethernet](#ethernet)  
-    3.1. [Wi-Fi](#wi-fi)
-4. [System Clock](#system-clock)
-5. [Disk Partitioning](#disk-partitioning)
-6. [Swap Space (Optional)](#swap-space-optional)  
-    6.1. [Swap Partition](#swap-partition)  
-    6.1. [Swapfile](#swapfile)
-7. [Format Partitions](#format-partitions)
-8. [Mount Partitions](#mount-partitions)
-9. [Install Essential Packages](#install-essential-packages)
-10. [Fstab](#fstab)
-11. [Change Root](#change-root)
-12. [Time Zone](#time-zone)
-13. [Localization](#localization)
-14. [Network Configuration](#network-configuration)  
-    14.1. [Systemd-networkd](#systemd-networkd)  
-    14.1. [NetworkManager](#networkmanager)
-15. [Initramfs](#initramfs)
-16. [Users & Passwords](#users-and-passwords)
-17. [Boot Loader](#boot-loader)  
-    17.1. [Systemd-boot](#systemd-boot)  
-    17.1. [GRUB](#grub)
+1. [Live Media Creation](#1-live-media-creation)
+2. [Verify Boot Mode](#2-verify-boot-mode)
+3. [Inital Network Setup](#3-initial-network-setup)  
+    3.1. [Ethernet](#31-ethernet)  
+    3.1. [WiFi](#31-wifi)
+4. [System Clock](#4-system-clock)
+5. [Disk Partitioning](#5-disk-partitioning)
+6. [Swap Space (Optional)](#6-swap-space-optional)  
+    6.1. [Swap Partition](#61-swap-partition)  
+    6.1. [Swapfile](#61-swapfile)
+7. [Format Partitions](#7-format-partitions)
+8. [Mount Partitions](#8-mount-partitions)
+9. [Install Essential Packages](#9-install-essential-packages)
+10. [Fstab](#10-fstab)
+11. [Change Root](#11-change-root)
+12. [Time Zone](#12-time-zone)
+13. [Localization](#13-localization)
+14. [Network Configuration](#14-network-configuration)  
+    14.1. [Systemd-networkd](#141-systemd-networkd)  
+    14.1. [NetworkManager](#141-networkmanager)
+15. [Initramfs](#15-initramfs)
+16. [Users & Passwords](#16-users-and-passwords)
+17. [Boot Loader](#17-boot-loader)  
+    17.1. [Systemd-boot](#171-systemd-boot)  
+    17.1. [GRUB](#171-grub)
 
 ## 1. Live Media Creation
 if a system with access to linux commands is available, use [dd](https://wiki.archlinux.org/title/Dd) to create a bootable arch linux installation image on a usb/sd card from the downloaded [iso](https://archlinux.org/download/). there are several ways to create an installation medium -- see how to  create an arch linux installer image, [here](https://wiki.archlinux.org/title/USB_flash_installation_medium)
@@ -65,7 +65,7 @@ plug in an ethernet cable
 
 ---
 
-### 3.1. _Wi-Fi_
+### 3.1. _WiFi_
 make sure the card isn't blocked with [rfkill](https://wiki.archlinux.org/title/Network_configuration/Wireless#Rfkill_caveat)
 ```shell
 rfkill list
@@ -106,7 +106,10 @@ verify connection
 [iwd] station <device> show
 ```
 
-exit prompt using 'ctrl+c'
+exit prompt (ctrl+c)
+```shell
+exit
+```
 
 _° for wwan (mobile broadband) -- see [nmcli](https://wiki.archlinux.org/title/Mobile_broadband_modem#ModemManager)_
 
@@ -135,29 +138,33 @@ if the system has an existing efi partition, don't create a new one. do not form
 
 to create any stacked block devices for [lvm](https://wiki.archlinux.org/title/LVM), [system encryption](https://wiki.archlinux.org/title/Dm-crypt) or [raid](https://wiki.archlinux.org/title/RAID), do it now
 
-for example: `gdisk /dev/sdX`
-```
-# new gpt partition table (erases any existing partitions on specified disk)
-o
+<details markdown='1'><summary>partitioning with gdisk</summary>
 
-# efi system partition
-n
-+512M
-ef00
+<h3 style="color:aquamarine;">gdisk /dev/sdX</h3>
 
-# (swap partition)
-n
-+4G
-8200
+#### new gpt partition table (erases any existing partitions)
+<p style="color:aquamarine;">o</p>
 
-# root partition
-n
-+10G
-8300
+#### efi system partition
+<p style="color:aquamarine;">n</p>
+<p style="color:aquamarine;">+512M</p>
+<p style="color:aquamarine;">ef00</p>
 
-# write changes
-w
-```
+
+#### (swap partition)
+<p style="color:aquamarine;">n</p>
+<p style="color:aquamarine;">+4G</p>
+<p style="color:aquamarine;">8200</p>
+
+#### root partition
+<p style="color:aquamarine;">n</p>
+<p style="color:aquamarine;">+10G</p>
+<p style="color:aquamarine;">8300</p>
+
+#### write changes
+<p style="color:aquamarine;">w</p>
+</details>
+
 
 ## 6. _Swap Space (Optional)_
 in order to create a [swap](https://wiki.archlinux.org/title/Partitioning_tools#Swap) consider creating either a [swap partition](https://wiki.archlinux.org/title/Swap#Swap_partition) or a [swapfile](https://wiki.archlinux.org/title/Swap#Swap_file) now. to share the [swap space](https://wiki.archlinux.org/title/Swap_file#Swap_space) system-wide with other operating systems or enable hibernation; create a linux swap partition. in comparison, a swapfile can change size on-the-fly and is more easily removed, which may be more desirable for a modestly-sized ssd
@@ -467,7 +474,10 @@ nano /etc/default/grub
 ```
 
 ## 18. Arch Linux Installation Complete :partying_face:
-exit chroot using ctrl+d
+exit (ctrl+d) chroot
+```shell
+exit
+```
 
 unmount all partitions; check if busy
 ```shell
